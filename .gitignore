@@ -1,0 +1,32 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Environment
+.env
+
+# Storage (don't commit uploaded files or databases)
+storage/pdfs/*
+!storage/pdfs/.gitkeep
+storage/page_images/*
+!storage/page_images/.gitkeep
+storage/db/*
+!storage/db/.gitkeep
+
+# byaldi model index
+.byaldi/
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# OS
+.DS_Store
+*.swp
+Thumbs.db
+
+#Others
+docs/
