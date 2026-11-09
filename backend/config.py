@@ -52,6 +52,11 @@ VISUAL_TOP_K: int = int(os.getenv("VISUAL_TOP_K", "3"))
 RRF_K: int = int(os.getenv("RRF_K", "60"))
 ENABLE_VISUAL_INDEXING: bool = os.getenv("ENABLE_VISUAL_INDEXING", "true").lower() in ("true", "1", "yes")
 
+# Modal GPU Acceleration for ColPali
+USE_MODAL: bool = os.getenv("USE_MODAL", "true").lower() in ("true", "1", "yes")
+MODAL_APP_NAME: str = os.getenv("MODAL_APP_NAME", "manuallens-colpali")
+MODAL_GPU: str = os.getenv("MODAL_GPU", "T4")
+
 # LLM settings
 GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "1500"))
