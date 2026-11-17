@@ -3,7 +3,14 @@ import shutil
 import zipfile
 from pathlib import Path
 from typing import Optional, Any
-from backend.config import QDRANT_DIR, USE_MODAL
+from backend.config import (
+    QDRANT_DIR,
+    USE_MODAL,
+    MODAL_BATCH_SIZE,
+    MODAL_PARALLEL_ENABLED,
+    MODAL_PARALLEL_THRESHOLD,
+    MODAL_MAX_CONTAINERS,
+)
 from backend.utils.file_utils import get_page_image_dir
 from backend.utils.logging_config import get_logger
 
@@ -67,7 +74,14 @@ def build_visual_index(document_id: str, image_paths: list[str]) -> None:
             from backend.modal_worker import get_modal_worker
             worker = get_modal_worker()
             zip_bytes = _pack_images_to_zip(image_paths)
-            result = worker.index_pages.remote(document_id, zip_bytes)
+            result = worker.index_pages.remote(
+                document_id=document_id,
+                image_zip_bytes=zip_bytes,
+                batch_size=MODAL_BATCH_SIZE,
+                parallel=MODAL_PARALLEL_ENABLED,
+                parallel_threshold=MODAL_PARALLEL_THRESHOLD,
+                max_containers=MODAL_MAX_CONTAINERS,
+            )
             logger.info("Modal GPU visual indexing succeeded for '%s': %s", document_id, result)
             return
         except Exception as e:

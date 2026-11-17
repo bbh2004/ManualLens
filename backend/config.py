@@ -56,6 +56,10 @@ ENABLE_VISUAL_INDEXING: bool = os.getenv("ENABLE_VISUAL_INDEXING", "true").lower
 USE_MODAL: bool = os.getenv("USE_MODAL", "true").lower() in ("true", "1", "yes")
 MODAL_APP_NAME: str = os.getenv("MODAL_APP_NAME", "manuallens-colpali")
 MODAL_GPU: str = os.getenv("MODAL_GPU", "T4")
+MODAL_BATCH_SIZE: int = int(os.getenv("MODAL_BATCH_SIZE", "2"))
+MODAL_PARALLEL_ENABLED: bool = os.getenv("MODAL_PARALLEL_ENABLED", "true").lower() in ("true", "1", "yes")
+MODAL_PARALLEL_THRESHOLD: int = int(os.getenv("MODAL_PARALLEL_THRESHOLD", "50"))
+MODAL_MAX_CONTAINERS: int = int(os.getenv("MODAL_MAX_CONTAINERS", "4"))
 
 # LLM settings
 GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")

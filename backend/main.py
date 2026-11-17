@@ -47,3 +47,19 @@ def health_check():
     """Health check endpoint for server and deployment monitoring."""
     return {"status": "ok"}
 
+@app.get("/api/warmup", tags=["warmup"])
+@app.post("/api/warmup", tags=["warmup"])
+def warmup_services():
+    """Predictive pre-warming endpoint for Modal serverless GPU containers."""
+    from backend.config import USE_MODAL
+    if not USE_MODAL:
+        return {"status": "skipped", "message": "USE_MODAL is false. Running locally."}
+    try:
+        from backend.modal_worker import get_modal_worker
+        worker = get_modal_worker()
+        res = worker.ping.remote()
+        return {"status": "ok", "modal_response": res, "message": "GPU worker is warm and ready."}
+    except Exception as e:
+        logger.warning(f"Modal warmup ping failed: {e}")
+        return {"status": "error", "message": str(e)}
+
