@@ -12,6 +12,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, stage }) => {
         return 'Extracting Text';
       case 'indexing_text':
         return 'Indexing Text & BM25';
+      case 'indexing_graph':
+        return 'Building Knowledge Graph';
       case 'rendering_pages':
         return 'Rendering Pages';
       case 'indexing_visuals':

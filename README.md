@@ -145,7 +145,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 ---
 
 ## 🗺️ Part 2 Roadmap (Confirmed Scope)
-- **GraphRAG (Neo4j):** Knowledge graph representation of manual entities (`ErrorCode`, `Component`, `Procedure`) to enable multi-hop reasoning (`E17 -> Fan -> Cleaning Procedure -> Page 84`).
-- **User Authentication:** JWT-based user authentication scoping document catalogs per user.
-- **Cloud Deployment:** Migration to Railway (backend + managed PostgreSQL) + Vercel (frontend) + Cloudflare R2 (storage) + Qdrant Cloud.
+- **GraphRAG (Feature 1 — ✅ Done):** Knowledge graph representation of manual entities (`Device`, `Component`, `ErrorCode`, `Symptom`, `Procedure`, `Specification`) enabling multi-hop reasoning (`E50 -> Fuser Unit -> Replace Procedure -> Page 481`). Dual-provider NetworkX + Neo4j with full plug-and-play `.env` toggle.
+- **User Authentication (Feature 2):** JWT-based user authentication scoping document catalogs per user.
+- **Cloud Deployment (Feature 3):** Migration to Railway (backend + managed PostgreSQL) + Vercel (frontend) + Cloudflare R2 (storage) + Qdrant Cloud.
 

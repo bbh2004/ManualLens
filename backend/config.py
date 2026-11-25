@@ -26,9 +26,10 @@ SQLITE_DB_PATH: Path = PROJECT_ROOT / os.getenv("SQLITE_DB_PATH", "storage/db/me
 CHROMA_DIR: Path = PROJECT_ROOT / os.getenv("CHROMA_DIR", "storage/db/chroma")
 QDRANT_DIR: Path = PROJECT_ROOT / os.getenv("QDRANT_DIR", "storage/db/qdrant")
 BM25_DIR: Path = STORAGE_DIR / "db" / "bm25"
+GRAPH_DIR: Path = STORAGE_DIR / "db" / "graph"
 
 # Ensure runtime directories exist
-for path in [PDF_DIR, PAGE_IMAGES_DIR, SQLITE_DB_PATH.parent, CHROMA_DIR, QDRANT_DIR, BM25_DIR]:
+for path in [PDF_DIR, PAGE_IMAGES_DIR, SQLITE_DB_PATH.parent, CHROMA_DIR, QDRANT_DIR, BM25_DIR, GRAPH_DIR]:
     path.mkdir(parents=True, exist_ok=True)
 
 # Processing settings
@@ -51,6 +52,15 @@ TEXT_TOP_K: int = int(os.getenv("TEXT_TOP_K", "5"))
 VISUAL_TOP_K: int = int(os.getenv("VISUAL_TOP_K", "3"))
 RRF_K: int = int(os.getenv("RRF_K", "60"))
 ENABLE_VISUAL_INDEXING: bool = os.getenv("ENABLE_VISUAL_INDEXING", "true").lower() in ("true", "1", "yes")
+
+# GraphRAG (Part 2 Feature 1)
+ENABLE_GRAPHRAG: bool = os.getenv("ENABLE_GRAPHRAG", "true").lower() in ("true", "1", "yes")
+GRAPH_BUILD_ON_INGEST: bool = os.getenv("GRAPH_BUILD_ON_INGEST", "true").lower() in ("true", "1", "yes")
+GRAPH_STORE_TYPE: str = os.getenv("GRAPH_STORE_TYPE", "auto").lower()  # "auto", "local", "neo4j"
+NEO4J_URI: str = os.getenv("NEO4J_URI", "")
+NEO4J_USER: str = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD: str = os.getenv("NEO4J_PASSWORD", "")
+GRAPH_TOP_K: int = int(os.getenv("GRAPH_TOP_K", "5"))
 
 # Modal GPU Acceleration for ColPali
 USE_MODAL: bool = os.getenv("USE_MODAL", "true").lower() in ("true", "1", "yes")

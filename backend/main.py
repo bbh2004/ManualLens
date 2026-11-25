@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.config import CORS_ORIGINS
 from backend.database import init_db
 from backend.utils.logging_config import setup_logging, get_logger
-from backend.api import upload, status, query, documents, pages
+from backend.api import upload, status, query, documents, pages, graph
 
 setup_logging()
 logger = get_logger("manuallens.main")
@@ -41,6 +41,7 @@ app.include_router(status.router)
 app.include_router(query.router)
 app.include_router(documents.router)
 app.include_router(pages.router)
+app.include_router(graph.router)
 
 @app.get("/health", tags=["health"])
 def health_check():

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException, status
 from backend.models import UploadResponse
 from backend.utils.file_utils import validate_pdf, generate_document_id, get_pdf_path
-from backend.config import ENABLE_VISUAL_INDEXING
+from backend.config import ENABLE_VISUAL_INDEXING, ENABLE_GRAPHRAG, GRAPH_BUILD_ON_INGEST
 from backend.database import create_document
 from backend.ingestion.pipeline import run_ingestion_sync
 from backend.utils.logging_config import get_logger
@@ -47,7 +47,13 @@ async def upload_pdf(
     )
 
     # Trigger background ingestion thread
-    background_tasks.add_task(run_ingestion_sync, doc_id, dest_path, ENABLE_VISUAL_INDEXING)
+    background_tasks.add_task(
+        run_ingestion_sync,
+        doc_id,
+        dest_path,
+        ENABLE_VISUAL_INDEXING,
+        ENABLE_GRAPHRAG and GRAPH_BUILD_ON_INGEST,
+    )
 
     logger.info("Accepted PDF upload '%s' -> assigned doc_id: %s", file.filename, doc_id)
     return UploadResponse(

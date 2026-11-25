@@ -41,6 +41,9 @@ def parse_response(raw_text: str, evidence: dict[str, Any]) -> dict[str, Any]:
         if p_num is not None and p_num not in page_to_chunk:
             page_to_chunk[p_num] = c
 
+    graph_data = evidence.get("graph_data", {}) or {}
+    graph_pages = set(graph_data.get("page_numbers", []))
+
     # Parse and validate citations
     raw_citations = data.get("citations", [])
     valid_citations: list[dict[str, Any]] = []
@@ -56,6 +59,13 @@ def parse_response(raw_text: str, evidence: dict[str, Any]) -> dict[str, Any]:
                 "page_number": p_num,
                 "chunk_text": c.get("excerpt") or matched_chunk.get("text", "")[:200],
                 "source": matched_chunk.get("source", "semantic"),
+            })
+        elif p_num in graph_pages:
+            valid_citations.append({
+                "document_id": document_id,
+                "page_number": p_num,
+                "chunk_text": c.get("excerpt") or f"Knowledge graph reasoning entity confirmed on Page {p_num}",
+                "source": "graph",
             })
 
     # If no citations were parsed by LLM but chunks were retrieved, associate top chunk

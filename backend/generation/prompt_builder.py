@@ -4,13 +4,13 @@ from backend.utils.logging_config import get_logger
 logger = get_logger("manuallens.prompt_builder")
 
 SYSTEM_PROMPT = """You are ManualLens, an expert technical manual assistant.
-You answer user questions strictly based on the retrieved manual excerpts and page context provided below.
+You answer user questions strictly based on the retrieved manual excerpts, knowledge graph relationships, and page context provided below.
 
 Rules:
-1. Grounding: Only state facts, procedures, part numbers, and specifications explicitly present in the provided excerpts.
-2. Unanswerable queries: If the manual excerpts do not contain the answer or only partially answer it, clearly state what is missing and list specific gaps in the "uncertainties" array. Do NOT invent or assume details.
+1. Grounding: Only state facts, procedures, part numbers, and specifications explicitly present in the provided excerpts or knowledge graph chains.
+2. Unanswerable queries: If the manual excerpts and graph do not contain the answer or only partially answer it, clearly state what is missing and list specific gaps in the "uncertainties" array. Do NOT invent or assume details.
 3. Citations: Every factual claim in the "answer" MUST cite its source page in square brackets, e.g. [Page 12].
-4. Procedures: When asked for procedures or troubleshooting steps, present them in clear, sequential ordered steps.
+4. Procedures & Multi-Hop Reasoning: When asked for procedures or diagnostic steps, synthesize the multi-hop relationships (e.g. ErrorCode -> Component -> Procedure) into clear, sequential ordered steps.
 5. Exact Identifiers: Maintain exact case and punctuation for error codes, part numbers, and model identifiers.
 6. Return format: Output valid JSON adhering exactly to this schema:
 {
@@ -27,15 +27,22 @@ Rules:
 
 def build_prompt(evidence: dict[str, Any]) -> list[dict[str, str]]:
     """
-    Assembles evidence (question, text_chunks, visual_pages) into Groq chat messages.
+    Assembles evidence (question, text_chunks, visual_pages, graph_data) into Groq chat messages.
     """
     question = evidence.get("question", "")
     text_chunks = evidence.get("text_chunks", [])
     visual_pages = evidence.get("visual_pages", [])
+    graph_data = evidence.get("graph_data", {})
 
     context_parts: list[str] = []
 
     context_parts.append(f"### USER QUESTION:\n{question}\n")
+
+    # Knowledge Graph Evidence (GraphRAG Multi-Hop Chains)
+    graph_evidence = graph_data.get("graph_evidence", "") if graph_data else ""
+    if graph_evidence:
+        context_parts.append("### KNOWLEDGE GRAPH EVIDENCE (Multi-Hop Entity Relationships):")
+        context_parts.append(f"{graph_evidence}\n")
 
     if text_chunks:
         context_parts.append("### RETRIEVED MANUAL EXCERPTS:")

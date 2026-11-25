@@ -3,7 +3,7 @@ import shutil
 import uuid
 from pathlib import Path
 from typing import Tuple
-from backend.config import PDF_DIR, PAGE_IMAGES_DIR, BM25_DIR, MAX_PDF_SIZE_MB
+from backend.config import PDF_DIR, PAGE_IMAGES_DIR, BM25_DIR, GRAPH_DIR, MAX_PDF_SIZE_MB
 from backend.utils.logging_config import get_logger
 
 logger = get_logger("manuallens.file_utils")
@@ -67,4 +67,13 @@ def cleanup_document_files(document_id: str) -> None:
             logger.info("Deleted BM25 pickle: %s", bm25_file)
         except Exception as e:
             logger.warning("Failed to delete BM25 file %s: %s", bm25_file, e)
+
+    # 4. Delete Knowledge Graph JSON
+    graph_file = GRAPH_DIR / f"{document_id}.json"
+    if graph_file.exists():
+        try:
+            graph_file.unlink()
+            logger.info("Deleted Graph file: %s", graph_file)
+        except Exception as e:
+            logger.warning("Failed to delete Graph file %s: %s", graph_file, e)
 

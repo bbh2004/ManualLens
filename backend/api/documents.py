@@ -52,6 +52,13 @@ def remove_document(document_id: str):
     except Exception as e:
         logger.debug("Visual index cleanup skipped or failed: %s", e)
 
+    # 3. Clean knowledge graph if available (Part 2 Feature 1)
+    try:
+        from backend.knowledge_graph.graph_store import delete_graph_store
+        delete_graph_store(document_id)
+    except Exception as e:
+        logger.debug("Graph store cleanup skipped or failed: %s", e)
+
     # 3. Clean files from disk (PDF, page images)
     cleanup_document_files(document_id)
 
